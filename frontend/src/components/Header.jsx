@@ -51,8 +51,8 @@ const Header = () => {
                 <div className="absolute bottom-[-30px] left-[-10px] backdrop-blur-md bg-white/20 border border-gray-500 p-5 rounded-2xl shadow-lg flex items-center gap-4 z-10 transition-transform duration-300 hover:scale-105 hover:bg-white/30 hover:shadow-xl">
                     <img className="w-16 h-14 rounded-full border-yellow-400" src={assets.group_profiles} alt="Profiles" />
                     <div>
-                        <p className="text-yellow-400 font-semibold text-lg mt-0">500+ Verified Doctors</p>
-                        <p className="text-gray-200 text-sm">Available 24/7</p>
+                        <p className="text-blue-1000 font-semibold text-lg mt-0">100+ Verified Doctors</p>
+                        <p className="text-yellow-800 text-sm">Available 24/7</p>
                     </div>
                 </div>
             </div>
