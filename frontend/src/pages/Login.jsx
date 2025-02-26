@@ -1,84 +1,90 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [state, setState] = useState('Sign Up');
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    console.log("Login clicked!", { email, password });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+
+  const onsubmitHandler = async (event) => {
+    event.preventDefault();
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-600 to-purple-600">
-      {/* Card Container */}
-      <div className="bg-white/20 backdrop-blur-md p-8 rounded-2xl shadow-2xl w-full max-w-md text-white border border-white/30">
-        
+    <form
+      className="min-h-[80vh] flex items-center justify-center bg-gray-100"
+      onSubmit={onsubmitHandler}
+    >
+      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
         {/* Header */}
-        <h2 className="text-3xl font-extrabold text-center mb-6">Welcome Back</h2>
-        <p className="text-center text-white/70 mb-6">Sign in to your account</p>
+        <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">
+          {state === 'Sign Up' ? 'Create Account' : 'Login'}
+        </h2>
+        <p className="text-gray-600 text-center mb-6">
+          Please {state === 'Sign Up' ? 'Sign Up' : 'Log in'} to book an appointment
+        </p>
 
-        {/* Form */}
-        <form onSubmit={handleLogin} className="space-y-4">
-          {/* Email Input */}
-          <div>
-            <label className="block text-white/80 text-sm font-semibold">Email</label>
+        {/* Name Field (Only for Sign Up) */}
+        {state === 'Sign Up' && (
+          <div className="mb-4">
+            <label className="block text-gray-700 font-medium mb-1">Full Name</label>
             <input
-              type="email"
-              className="w-full p-3 rounded-lg bg-white/30 text-white placeholder-white/70 focus:ring-2 focus:ring-blue-300 outline-none"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
+              type="text"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              onChange={(e) => setName(e.target.value)}
+              value={name}
+              placeholder="Enter your full name"
             />
           </div>
+        )}
 
-          {/* Password Input */}
-          <div>
-            <label className="block text-white/80 text-sm font-semibold">Password</label>
-            <input
-              type="password"
-              className="w-full p-3 rounded-lg bg-white/30 text-white placeholder-white/70 focus:ring-2 focus:ring-blue-300 outline-none"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-
-          {/* Forgot Password & Login Button */}
-          <div className="flex justify-between text-sm text-white/70">
-            <a href="#" className="hover:text-white">Forgot Password?</a>
-          </div>
-
-          {/* Submit Button */}
-          <button type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg font-semibold transition duration-300">
-            Sign In
-          </button>
-        </form>
-
-        {/* Divider */}
-        <div className="my-6 flex items-center text-white/50">
-          <hr className="flex-grow border-white/30" />
-          <span className="mx-4">OR</span>
-          <hr className="flex-grow border-white/30" />
+        {/* Email Field */}
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-1">Email</label>
+          <input
+            type="email"
+            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+            placeholder="Enter your email"
+          />
         </div>
 
-        {/* Social Login */}
-        <button className="w-full flex items-center justify-center bg-white/20 hover:bg-white/30 text-white py-3 rounded-lg font-semibold transition duration-300">
-          <img src="https://www.svgrepo.com/show/512317/google.svg" alt="Google" className="w-5 h-5 mr-2" />
-          Sign in with Google
+        {/* Password Field */}
+        <div className="mb-6">
+          <label className="block text-gray-700 font-medium mb-1">Password</label>
+          <input
+            type="password"
+            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+            placeholder="Enter your password"
+          />
+        </div>
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white font-medium py-2 rounded-lg hover:bg-blue-700 transition duration-300"
+        >
+          {state === 'Sign Up' ? 'Create Account' : 'Login'}
         </button>
 
-        {/* Signup Link */}
-        <p className="mt-4 text-center text-white/80">
-          Don't have an account?{" "}
-          <a href="#" className="text-white font-semibold hover:underline">
-            Sign up
-          </a>
+        {/* Toggle Between Sign Up & Login */}
+        <p className="text-center text-gray-600 mt-4">
+          {state === 'Sign Up' ? 'Already have an account?' : "Don't have an account?"}
+          <button
+            type="button"
+            className="text-blue-600 font-medium ml-1 hover:underline"
+            onClick={() => setState(state === 'Sign Up' ? 'Login' : 'Sign Up')}
+          >
+            {state === 'Sign Up' ? 'Login' : 'Sign Up'}
+          </button>
+          
         </p>
       </div>
-    </div>
+    </form>
   );
 };
 

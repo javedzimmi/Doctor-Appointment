@@ -18,7 +18,7 @@ const TopDoctors = () => {
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 mt-10'>
                 {doctors.slice(0, 10).map((item, index) => (
                     <div
-                        onClick={() => navigate(`/appointment/${item._id}`)}
+                    onClick={() =>{ navigate(`/appointment/${item._id}`);scrollTo(0,0)}}
                         key={index}
                         className='group relative flex flex-col items-center bg-white p-6 rounded-xl shadow-xl transform hover:scale-105 hover:shadow-2xl transition-all duration-300'
                     >
