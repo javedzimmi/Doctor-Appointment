@@ -1,5 +1,5 @@
 import React from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import Home from './pages/Home'
 import About from './pages/About'
 import Doctors from './pages/Doctors'
@@ -10,13 +10,23 @@ import Appointment from './pages/Appointment'
 import MyAppoinments from './pages/MyAppoinments'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import Admin from './pages/Admin'
+import DoctorLogin from './pages/DoctorLogin'
+import AdminPanel from './pages/adminPanel'
+
 
 
 
 const App = () => {
+  const location = useLocation(); // Get current route
+
+  // Define routes where Navbar & Footer should be hidden
+  const hiddenRoutes = ['/admin', '/doctor','/admin-page'];
+  const hideLayout = hiddenRoutes.includes(location.pathname);
+
   return (
     <div className='mx-4 sm:mx-[10%]'>
-      <Navbar />
+       {!hideLayout && <Navbar />}
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/doctors' element={<Doctors />} />
@@ -24,11 +34,17 @@ const App = () => {
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/login' element={<Login />} />
+        
+        <Route path='/admin' element={<Admin />} />
+        <Route path='/doctor' element={<DoctorLogin />} />
+        <Route path='/admin-page' element={  <AdminPanel/>} />
+      
+
         <Route path='/my-profile' element={<MyProfile />} />
         <Route path='/my-appointments' element={<MyAppoinments />} />
         <Route path='/appointment/:docId' element={<Appointment />} />
       </Routes>
-      <Footer/>
+      {!hideLayout && <Footer />}
     </div>
   )
 }
