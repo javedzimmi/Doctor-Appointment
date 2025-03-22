@@ -3,6 +3,7 @@ import cors from 'cors';
 import mongoDB from './config/mongodb.js';
 import dotenv from 'dotenv';
 import connectCloudinary from './config/cloudinary.js';
+import adminRouter from './routes/adminRoute.js';
 
 // App config
 const app = express();
@@ -18,6 +19,14 @@ app.use(cors());
 app.get("/", (req, res) => {
     res.send("API is working!")
 });
+app.get("/home",(req,res)=>{
+    res.send("apppasjdbbf")
+})
+
+//api end point
+app.use("/api/admin",adminRouter);
+// localhost:4000/api/admin/add-doctor
+
 
 // Start the server
 app.listen(port, () => {
