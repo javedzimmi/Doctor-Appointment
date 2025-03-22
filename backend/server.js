@@ -15,6 +15,7 @@ connectCloudinary()
 app.use(express.json());
 app.use(cors());
 
+
 // API endpoint
 app.get("/", (req, res) => {
     res.send("API is working!")

@@ -1,127 +1,90 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import axios from "axios";
 
 const AddDoctor = () => {
-    const [formData, setFormData] = useState({
+    const [doctor, setDoctor] = useState({
         name: "",
         email: "",
         password: "",
-        experience: "1 Year",
-        speciality: "General physician",
+        speciality: "",
         degree: "",
-        address1: "",
-        address2: "",
+        experience: "",
+        about: "",
         fees: "",
-        profilePic: null,
-        aboutDoctor: "",
+        address: "",
+        image: null,  // New state for image
     });
 
-    const [preview, setPreview] = useState(null);
-
-    // Handle Input Change
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
-
-    // Handle File Upload
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setFormData({ ...formData, profilePic: file });
-            setPreview(URL.createObjectURL(file)); // Preview Image
+        if (e.target.name === "image") {
+            setDoctor({ ...doctor, image: e.target.files[0] }); // Store file
+        } else {
+            setDoctor({ ...doctor, [e.target.name]: e.target.value });
         }
     };
 
-    // Handle Form Submission
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        
-        if (!formData.name || !formData.email || !formData.password || !formData.fees) {
-            alert("Please fill in all required fields.");
-            return;
-        }
 
-        console.log("Doctor Data Submitted:", formData);
+        // Use FormData to send file + text fields
+        const formData = new FormData();
+    formData.append("name", doctor.name);
+    formData.append("email", doctor.email);
+    formData.append("password", doctor.password);
+    formData.append("speciality", doctor.speciality);
+    formData.append("degree", doctor.degree);
+    formData.append("experience", doctor.experience);
+    formData.append("about", doctor.about);
+    formData.append("fees", doctor.fees);
+    formData.append("address", JSON.stringify(doctor.address)); // Ensure correct format
+    formData.append("image", doctor.image); // Append file
+
+        try {
+            const response = await axios.post("http://localhost:4000/api/admin/add-doctor", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+
+            alert("Doctor added successfully");
+            console.log("Response:", response.data);
+
+            // Reset form
+            setDoctor({
+                name: "",
+                email: "",
+                password: "",
+                speciality: "",
+                degree: "",
+                experience: "",
+                about: "",
+                fees: "",
+                address: "",
+                image: null,
+            });
+        } catch (error) {
+            console.error("Error:", error.response?.data || error.message);
+            alert("Failed to add doctor");
+        }
     };
 
     return (
-        <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-lg overflow-auto max-h-screen">
-            <h2 className="text-2xl font-bold mb-6 text-center">Add Doctor</h2>
+        <div>
+            <h2>Add Doctor</h2>
+            <form onSubmit={handleSubmit} encType="multipart/form-data">
+                <input type="text" name="name" placeholder="Name" value={doctor.name} onChange={handleChange} required />
+                <input type="email" name="email" placeholder="Email" value={doctor.email} onChange={handleChange} required /><br /><br />
+                <input type="password" name="password" placeholder="Password" value={doctor.password} onChange={handleChange} required /><br /><br />
+                <input type="text" name="speciality" placeholder="Speciality" value={doctor.speciality} onChange={handleChange} required />
+                <input type="text" name="degree" placeholder="Degree" value={doctor.degree} onChange={handleChange} required /><br /><br />
+                <input type="text" name="about" placeholder="About" value={doctor.about} onChange={handleChange} required /><br /><br />
+                <input type="number" name="fees" placeholder="Fees" value={doctor.fees} onChange={handleChange} required />
 
-            <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
+                <input type="text" name="experience" placeholder="experience" onChange={handleChange} required /><br /><br />
+
+
+                <input type="text" name="address" placeholder="Address" value={doctor.address} onChange={handleChange} required /><br /><br />
+                <input type="file" name="image" accept="image/*" onChange={handleChange} required /><br /><br />
                 
-                {/* Profile Picture Upload */}
-                <div className="col-span-2 flex flex-col items-center">
-                    {preview ? (
-                        <img src={preview} alt="Profile" className="w-24 h-24 object-cover rounded-full border-2 border-gray-300 mb-3" />
-                    ) : (
-                        <div className="w-24 h-24 bg-gray-200 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-500 mb-3">
-                            No Image
-                        </div>
-                    )}
-                    <input type="file" accept="image/*" className="hidden" id="profilePic" onChange={handleFileChange} />
-                    <label htmlFor="profilePic" className="cursor-pointer bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-600 text-sm">
-                        Upload Photo
-                    </label>
-                </div>
-
-                {/* Left Column */}
-                <div>
-                    <label className="block font-medium">Your Name</label>
-                    <input type="text" name="name" className="w-full border p-2 rounded mt-1" onChange={handleChange} />
-
-                    <label className="block font-medium mt-3">Doctor Email</label>
-                    <input type="email" name="email" className="w-full border p-2 rounded mt-1" onChange={handleChange} />
-
-                    <label className="block font-medium mt-3">Set Password</label>
-                    <input type="password" name="password" className="w-full border p-2 rounded mt-1" onChange={handleChange} />
-
-                    <label className="block font-medium mt-3">Experience</label>
-                    <select name="experience" className="w-full border p-2 rounded mt-1" onChange={handleChange}>
-                        <option>1 Year</option>
-                        <option>2 Years</option>
-                        <option>5+ Years</option>
-                    </select>
-
-                    <label className="block font-medium mt-3">Fees</label>
-                    <input type="number" name="fees" className="w-full border p-2 rounded mt-1" onChange={handleChange} />
-                </div>
-
-                {/* Right Column */}
-                <div>
-                    <label className="block font-medium">Speciality</label>
-                    <select name="speciality" className="w-full border p-2 rounded mt-1" onChange={handleChange}>
-                        <option>General physician</option>
-                        <option>Cardiologist</option>
-                        <option>Dermatologist</option>
-                    </select>
-
-                    <label className="block font-medium mt-3">Degree</label>
-                    <input type="text" name="degree" className="w-full border p-2 rounded mt-1" onChange={handleChange} />
-
-                    <label className="block font-medium mt-3">Address</label>
-                    <input type="text" name="address1" placeholder="Address 1" className="w-full border p-2 rounded mt-1" onChange={handleChange} />
-                    <input type="text" name="address2" placeholder="Address 2" className="w-full border p-2 rounded mt-2" onChange={handleChange} />
-                </div>
-
-                {/* About Doctor Section */}
-                <div className="col-span-2">
-                    <label className="block font-medium">About Doctor</label>
-                    <textarea
-                        name="aboutDoctor"
-                        rows="3"
-                        className="w-full border p-2 rounded mt-1"
-                        placeholder="Write a short description about the doctor..."
-                        onChange={handleChange}
-                    ></textarea>
-                </div>
-
-                {/* Submit Button - Fixed Visibility */}
-                <div className="col-span-2 flex justify-center mt-4 pb-4">
-                    <button type="submit" className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition">
-                        Add Doctor
-                    </button>
-                </div>
+                <button type="submit">Submit</button>
             </form>
         </div>
     );
