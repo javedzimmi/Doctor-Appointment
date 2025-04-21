@@ -4,6 +4,7 @@ import mongoDB from './config/mongodb.js';
 import dotenv from 'dotenv';
 import connectCloudinary from './config/cloudinary.js';
 import adminRouter from './routes/adminRoute.js';
+import doctorRouter from './routes/doctorRoute.js';
 
 // App config
 const app = express();
@@ -27,6 +28,9 @@ app.get("/home",(req,res)=>{
 //api end point
 app.use("/api/admin",adminRouter);
 // localhost:4000/api/admin/add-doctor
+
+
+app.use("/api/doctor",doctorRouter);
 
 
 // Start the server
