@@ -4,6 +4,8 @@ import bcrypt from "bcrypt"
 import userModel from "../models/userModel.js";
 import jwt from "jsonwebtoken"
 import { v2 as cloudinary } from "cloudinary"
+import doctorModel from "../models/doctorModel.js";
+import appointmentModel from "../models/appointmentModel.js";
 
 const registeruser = async (req, res) => {
 
@@ -141,5 +143,73 @@ const updateProfile = async (req, res) => {
     }
 };
 
+// book appopintment 
+const bookAppointment = async (req, res) => {
+    try {
+        const { userId, docId, slotDate, slotTime } = req.body;
 
-export { registeruser, loginUser, getProfile, updateProfile }
+        const docData = await doctorModel.findById(docId).select("-password");
+        if (!docData.available) {
+            return res.json({ success: true, message: "Doctor not available" });
+        }
+
+        let slots_booked = docData.slots_booked;
+
+        // Checking for slot availability
+        if (slots_booked[slotDate]) {
+            // If the slot date exists, check if the slot time is available
+            if (slots_booked[slotDate].includes(slotTime)) {
+                return res.json({ success: true, message: "Slot not available" });
+            } else {
+                // Slot is available, add it
+                slots_booked[slotDate].push(slotTime);
+            }
+        } else {
+            // If the slot date doesn't exist, add it and then push the slot time
+            slots_booked[slotDate] = [slotTime];
+        }
+
+        const userData = await userModel.findById(userId).select('-password');
+        delete docData.slots_booked;
+
+        const appointmentData = {
+            userId,
+            docId,
+            userData,
+            docData,
+            amount: docData.fees,
+            slotTime,
+            slotDate,
+            date: Date.now(),
+        };
+
+        const newAppointment = new appointmentModel(appointmentData);
+        await newAppointment.save();
+
+        // Save new slots data in doctor model
+        await doctorModel.findByIdAndUpdate(docId, { slots_booked });
+
+        res.json({ success: true, message: "Appointment booked" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Server error: " + error.message });
+    }
+};
+
+// api to get user appointment  for frontend my-appointment page
+const listAppointment = async (req, res) => {
+    try {
+
+        const { userId } = req.body;
+        const appointments = await appointmentModel.find({ userId })
+        res.json({ success: true, appointments })
+    } catch (error) {
+
+        console.error(error);
+        res.status(500).json({ success: false, message: "Server error: " + error.message });
+    }
+
+}
+
+
+export { registeruser, loginUser, getProfile, updateProfile, bookAppointment, listAppointment }

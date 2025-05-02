@@ -51,7 +51,7 @@ const AppContextPrivider = (props) => {
 
 
     const value = {
-        doctors,
+        doctors,getDoctorsData,
         token, setToken,
         backendUrl,
         userData, setUserData,
