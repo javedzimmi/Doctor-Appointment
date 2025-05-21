@@ -200,7 +200,7 @@ export const doctors = [
     },
     {
         _id: 'doc9',
-        name: 'Dr. Ava Mitchell',
+        name: ' ',
         image: doc9,
         speciality: 'Dermatologist',
         degree: 'MBBS',

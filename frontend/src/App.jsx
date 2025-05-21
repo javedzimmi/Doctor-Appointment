@@ -15,6 +15,7 @@ import { ToastContainer, toast } from 'react-toastify';
 
 
 
+
 const App = () => {
   const location = useLocation(); // Get current route
 
@@ -36,6 +37,7 @@ const App = () => {
         <Route path='/my-profile' element={<MyProfile />} />
         <Route path='/my-appointments' element={<MyAppoinments />} />
         <Route path='/appointment/:docId' element={<Appointment />} />
+       
       </Routes>
       <Footer />
     </div>

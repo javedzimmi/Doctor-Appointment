@@ -1,13 +1,13 @@
 import React, { useContext, useState } from "react";
 
 import { assets } from "../assets/assets";
-import { NavLink, useNavigate } from "react-router-dom"; // Import from react-router-dom
+import { Link, NavLink, useNavigate } from "react-router-dom"; // Import from react-router-dom
 import { AppContext } from "../context/AppContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const {token ,setToken,userData}= useContext(AppContext);
-
+ 
 
   const [showMenu, setShowMenu] = useState(false);
 
@@ -34,16 +34,16 @@ const Navbar = () => {
         <NavLink to="/contact" className={({ isActive }) => (isActive ? "text-blue-500" : "text-black")}>
           <li className="py-1">CONTACT</li>
         </NavLink>
-        <NavLink
-          to="/admin"
+        <Link
+          to="http://localhost:5174/"
           className={({ isActive }) =>
             isActive
               ? "text-blue-500 border border-blue-500 rounded-full"
               : "text-black border border-gray-500 rounded-full"
           }
         >
-          <li className="py-1 px-4 ">Admin Panel</li>
-        </NavLink>
+          <li  className="py-1 px-4 ">Admin Panel</li>
+        </Link>
 
       </ul>
 
